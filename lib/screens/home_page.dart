@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ui_1/data/data.dart';
+import 'package:ui_1/models/order.dart';
 import 'package:ui_1/screens/cart_screen.dart';
 import 'package:ui_1/screens/restaurant_screen.dart';
 
@@ -8,8 +9,10 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red,
-        leading: Icon(Icons.account_circle),
+        leading: Icon(
+          Icons.account_circle,
+          size: 30.0,
+        ),
         title: Text('Food Delivery'),
         centerTitle: true,
         actions: [
@@ -32,6 +35,7 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -39,8 +43,17 @@ class HomePage extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: TextField(
                 decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.symmetric(vertical: 15.0),
+                  fillColor: Colors.white,
+                  filled: true,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide(
+                        width: 0.8, color: Theme.of(context).primaryColor),
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide(width: 0.8),
                   ),
                   hintText: 'Search Food or Restaurants',
                   prefixIcon: Icon(Icons.search),
@@ -57,19 +70,7 @@ class HomePage extends StatelessWidget {
             SizedBox(
               height: 10.0,
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  RecentOrderCard(),
-                  RecentOrderCard(),
-                  RecentOrderCard(),
-                  RecentOrderCard(),
-                  RecentOrderCard(),
-                  RecentOrderCard(),
-                ],
-              ),
-            ),
+            RecentOrderCard(),
             SizedBox(
               height: 5.0,
             ),
@@ -96,7 +97,7 @@ class RestaurantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Card(
+      child: Container(
         child: Row(
           children: [
             Padding(
@@ -109,58 +110,15 @@ class RestaurantCard extends StatelessWidget {
                     ),
                   );
                 },
-                child: Image(
-                  image: AssetImage('assets/images/restaurant0.jpg'),
-                  height: 200.0,
-                  width: 150.0,
-                ),
-              ),
-            ),
-            Column(
-              children: [
-                Text(
-                  'Restaurant 0',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10.0),
+                  child: Image(
+                    fit: BoxFit.cover,
+                    image: AssetImage('assets/images/restaurant0.jpg'),
+                    //height: 200.0,
+                    width: 150.0,
                   ),
                 ),
-                Row(
-                  children: [
-                    Icon(Icons.star),
-                    Icon(Icons.star),
-                    Icon(Icons.star),
-                    Icon(Icons.star),
-                  ],
-                ),
-                Text('200 Main St,New'),
-              ],
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class RecentOrderCard extends StatelessWidget {
-  const RecentOrderCard({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Card(
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image(
-                height: 150.0,
-                width: 120.0,
-                image: AssetImage('assets/images/steak.jpg'),
               ),
             ),
             SizedBox(
@@ -170,31 +128,28 @@ class RecentOrderCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Steak',
-                  style: TextStyle(fontWeight: FontWeight.w700),
+                  'Restaurant 0',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 SizedBox(
-                  height: 5.0,
+                  height: 2.0,
                 ),
-                Text('Restaurant 2'),
+                Row(
+                  children: [
+                    Icon(Icons.star),
+                    Icon(Icons.star),
+                    Icon(Icons.star),
+                    Icon(Icons.star),
+                  ],
+                ),
                 SizedBox(
-                  height: 5.0,
+                  height: 2.0,
                 ),
-                Text('Nov 10,2019'),
+                Text('200 Main St,New'),
               ],
-            ),
-            SizedBox(
-              width: 20.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CircleAvatar(
-                backgroundColor: Colors.red,
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-              ),
             )
           ],
         ),
@@ -212,7 +167,104 @@ class HeadingText extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Text(
         data,
-        style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+        style: TextStyle(
+            fontSize: 24.0, fontWeight: FontWeight.w600, letterSpacing: 1.2),
+      ),
+    );
+  }
+}
+
+class RecentOrderCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 120.0,
+      child: ListView.builder(
+        padding: EdgeInsets.only(left: 10.0),
+        physics: BouncingScrollPhysics(),
+        scrollDirection: Axis.horizontal,
+        itemCount: currentUser.cart.length,
+        itemBuilder: (BuildContext context, int index) {
+          Order order = currentUser.orders[index];
+          return BuildRecentOrder(
+            order: order,
+          );
+        },
+      ),
+    );
+  }
+}
+
+class BuildRecentOrder extends StatelessWidget {
+  final Order order;
+  BuildRecentOrder({this.order});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(10.0),
+      width: 320.0,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(5.0),
+        border: Border.all(
+          width: 1.0,
+          color: Colors.grey[200],
+        ),
+      ),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(15.0),
+            child: Image(
+              height: 100.0,
+              width: 100.0,
+              image: AssetImage(
+                order.food.imageUrl,
+              ),
+              fit: BoxFit.cover,
+            ),
+          ),
+          SizedBox(
+            width: 20.0,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                order.food.name,
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 4.0,
+              ),
+              Text(
+                order.restaurant.name,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Text(
+                order.date,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            width: 45.0,
+          ),
+          CircleAvatar(
+            backgroundColor: Theme.of(context).primaryColor,
+            child: Icon(
+              Icons.add,
+              size: 30.0,
+            ),
+          )
+        ],
       ),
     );
   }

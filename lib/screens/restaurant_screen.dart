@@ -8,6 +8,7 @@ class RestaurantScreen extends StatelessWidget {
       body: Stack(
         children: [
           SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -98,7 +99,7 @@ class RestaurantScreen extends StatelessWidget {
                   })),
           Positioned(
             right: 20.0,
-            top: 40.0,
+            top: 50.0,
             child: Icon(
               Icons.favorite_outline,
               color: Colors.white,
@@ -120,28 +121,43 @@ class ReceipeCard extends StatelessWidget {
     return Stack(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Image(
-            image: AssetImage(
-              'assets/images/steak.jpg',
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+          child: Container(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10.0),
+              child: Image(
+                fit: BoxFit.cover,
+                image: AssetImage(
+                  'assets/images/steak.jpg',
+                ),
+                height: 150.0,
+                width: 150.0,
+              ),
             ),
-            height: 150.0,
-            width: 150.0,
           ),
         ),
         Positioned(
-          top: 35.0,
+          top: 45.0,
           left: 58.0,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ReceipeText(),
+              SizedBox(
+                height: 5.0,
+              ),
               ReceipeText(),
-              CircleAvatar(
-                backgroundColor: Colors.red,
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
+              SizedBox(
+                height: 20.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 60.0),
+                child: CircleAvatar(
+                  backgroundColor: Colors.red,
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],
@@ -168,12 +184,17 @@ class CustomButton extends StatelessWidget {
   CustomButton({this.data});
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
-      color: Colors.red,
-      onPressed: () {},
-      child: Text(
-        data,
-        style: TextStyle(color: Colors.white),
+    return Container(
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
+      child: FlatButton(
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+        color: Colors.red,
+        onPressed: () {},
+        child: Text(
+          data,
+          style: TextStyle(color: Colors.white),
+        ),
       ),
     );
   }

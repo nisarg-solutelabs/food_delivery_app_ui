@@ -17,6 +17,7 @@ class CartScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: Column(
           children: [
             CardReceipeCard(),
@@ -97,14 +98,22 @@ class CardReceipeCard extends StatelessWidget {
     return Row(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Image(
-            image: AssetImage('assets/images/steak.jpg'),
-            height: 200.0,
-            width: 150.0,
+          padding: const EdgeInsets.all(16.0),
+          child: Container(
+            height: 130.0,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20.0),
+              child: Image(
+                fit: BoxFit.cover,
+                image: AssetImage('assets/images/steak.jpg'),
+                height: 200.0,
+                width: 150.0,
+              ),
+            ),
           ),
         ),
         Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'Salmon Salad',
@@ -126,28 +135,37 @@ class CardReceipeCard extends StatelessWidget {
             Container(
               decoration:
                   BoxDecoration(borderRadius: BorderRadius.circular(10.0)),
-              child: Row(
-                children: [
-                  Text(
-                    '-',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                  SizedBox(
-                    width: 15.0,
-                  ),
-                  Text(
-                    '1',
-                    style:
-                        TextStyle(fontWeight: FontWeight.w900, fontSize: 20.0),
-                  ),
-                  SizedBox(
-                    width: 15.0,
-                  ),
-                  Text(
-                    '+',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ],
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    border: Border.all(width: 0.7, color: Colors.black)),
+                width: 80.0,
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12.0),
+                      child: Text(
+                        '-',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 15.0,
+                    ),
+                    Text(
+                      '1',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w900, fontSize: 20.0),
+                    ),
+                    SizedBox(
+                      width: 15.0,
+                    ),
+                    Text(
+                      '+',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ],
+                ),
               ),
             )
           ],
